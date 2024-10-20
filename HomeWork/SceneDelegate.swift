@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  HomeWork
-//
-//  Created by Данил Толстиков on 20.10.2024.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
