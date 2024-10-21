@@ -7,21 +7,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
         setup()
     }
     
-    //!!!Constants to struct!!!
+    struct Constants {
+        static let labelFontSize: CGFloat = 40
+        static let elementsCornerRadius: CGFloat = 20
+        static let loginButtonSizeFont: CGFloat = 20
+        static let errorLabelFontSize: CGFloat = 12
+    }
+    
     
     //MARK: - Fields
     private let label : UILabel = {
         let view = UILabel()
         view.text = "Sigma App"
         view.textAlignment = .center
-        view.font = .systemFont(ofSize: .init(40))
+        view.font = .systemFont(ofSize: .init(Constants.labelFontSize))
         return view
     }()
     
     private let loginTextField: UITextField = {
         let view = UITextField()
         view.placeholder = "Enter E-mail..."
-        view.layer.cornerRadius = 20
+        view.layer.cornerRadius = Constants.elementsCornerRadius
         view.backgroundColor = .systemGray6
         view.borderStyle = .roundedRect
         return view
@@ -30,7 +36,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private let passwordTextField: UITextField = {
         let view = UITextField()
         view.placeholder = "Enter password..."
-        view.layer.cornerRadius = 20
+        view.layer.cornerRadius = Constants.elementsCornerRadius
         view.backgroundColor = .systemGray6
         view.borderStyle = .roundedRect
         view.isSecureTextEntry = true
@@ -42,8 +48,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         view.setTitle("Login", for: .normal)
         view.setTitleColor(.white, for: .normal)
         view.backgroundColor = .systemBlue
-        view.titleLabel?.font = .systemFont(ofSize: .init(20))
-        view.layer.cornerRadius = 20
+        view.titleLabel?.font = .systemFont(ofSize: .init(Constants.loginButtonSizeFont))
+        view.layer.cornerRadius = Constants.elementsCornerRadius
         return view
     }()
     
@@ -52,20 +58,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
         view.text = "Enter a valid E-mail. Example test@test.com"
         view.textColor = .systemRed
         view.textAlignment = .left
-        view.font = .systemFont(ofSize: .init(12))
+        view.font = .systemFont(ofSize: .init(Constants.errorLabelFontSize))
         view.isHidden = true
         return view
     }()
     
     //MARK: - Constraints
-    func createLabelConstraints() {
+    private func createLabelConstraints() {
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
         label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
     }
     
-    func createLoginConstraints() {
+    private func createLoginConstraints() {
         loginTextField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginTextField)
         loginTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -74,7 +80,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         loginTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30).isActive = true
     }
     
-    func createPasswordConstraints() {
+    private func createPasswordConstraints() {
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(passwordTextField)
         passwordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -83,7 +89,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 35).isActive = true
     }
     
-    func createButtonConstrainsts() {
+    private func createButtonConstrainsts() {
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginButton)
         loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -92,7 +98,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         loginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
     }
     
-    func createErrorLabelConstraints() {
+    private func createErrorLabelConstraints() {
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(errorLabel)
         errorLabel.leftAnchor.constraint(equalTo: loginTextField.leftAnchor).isActive = true
@@ -100,7 +106,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK: - Functions
-    func setup() {
+    private func setup() {
         loginTextField.delegate = self
         passwordTextField.delegate = self
         pushTextFieldsUp()
@@ -113,7 +119,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         loginButton.addTarget(self, action: #selector(login), for: .touchUpInside)
     }
     
-    func isEmailValid() -> Bool{
+    private func isEmailValid() -> Bool{
         let text = loginTextField.text ?? ""
         if !text.isEmpty {
             if text.contains("@") && text.contains(".com"){
@@ -144,7 +150,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     //tapped around = keybord closing
-    func hideKeyboardWhenTappedAround() {
+    private func hideKeyboardWhenTappedAround() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -154,7 +160,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     //pushing textFields upper when its portrait orientation
-    func pushTextFieldsUp() {
+    private func pushTextFieldsUp() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { _ in
             if self.view.bounds.width > self.view.bounds.height && self.view.frame.origin.y == 0{
                 print(self.view.bounds.width < self.view.bounds.height)
