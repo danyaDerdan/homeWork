@@ -126,6 +126,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @objc func login() {
         if isEmailValid() {
             errorLabel.isHidden = true
+            let secondvc = SecondViewController()
+            navigationController?.pushViewController(secondvc, animated: true)
         }
         else {
             loginTextField.backgroundColor = .lightRed
@@ -154,7 +156,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     //pushing textFields upper when its portrait orientation
     func pushTextFieldsUp() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { _ in
-            if !UIDevice.current.orientation.isPortrait && self.view.frame.origin.y == 0{
+            if self.view.bounds.width > self.view.bounds.height && self.view.frame.origin.y == 0{
+                print(self.view.bounds.width < self.view.bounds.height)
                 self.view.frame.origin.y = -80
             }
         }
@@ -172,8 +175,5 @@ class ViewController: UIViewController, UITextFieldDelegate {
             loginTextField.backgroundColor = .lightRed
         }
     }
-    
-    
-
 }
 

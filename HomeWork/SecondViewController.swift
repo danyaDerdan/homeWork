@@ -1,12 +1,10 @@
-//
-//  SecondViewController.swift
-//  HomeWork
-//
-//  Created by Данил Толстиков on 21.10.2024.
-//
-
 import UIKit
 
-class SecondViewController: NSObject {
+class SecondViewController: UIViewController {
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Homework 3 wil be here"
+    }
+    
 }
