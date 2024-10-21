@@ -33,15 +33,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
         view.layer.cornerRadius = 20
         view.backgroundColor = .systemGray6
         view.borderStyle = .roundedRect
+        view.isSecureTextEntry = true
         return view
     }()
     
     private let loginButton: UIButton = {
-        let view = UIButton()
+        let view = UIButton(type: .system)
         view.setTitle("Login", for: .normal)
         view.setTitleColor(.white, for: .normal)
         view.backgroundColor = .systemBlue
+        view.titleLabel?.font = .systemFont(ofSize: .init(20))
         view.layer.cornerRadius = 20
+        return view
+    }()
+    
+    private let errorLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Enter a valid E-mail. Example test@test.com"
+        view.textColor = .systemRed
+        view.textAlignment = .left
+        view.font = .systemFont(ofSize: .init(12))
+        view.isHidden = true
         return view
     }()
     
@@ -58,7 +70,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(loginTextField)
         loginTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.85).isActive = true
-        loginTextField.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        loginTextField.heightAnchor.constraint(equalToConstant: 35).isActive = true
         loginTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30).isActive = true
     }
     
@@ -68,7 +80,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         passwordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         passwordTextField.widthAnchor.constraint(equalTo: loginTextField.widthAnchor).isActive = true
         passwordTextField.heightAnchor.constraint(equalTo: loginTextField.heightAnchor).isActive = true
-        passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 30).isActive = true
+        passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 35).isActive = true
     }
     
     func createButtonConstrainsts() {
@@ -76,8 +88,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(loginButton)
         loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginButton.widthAnchor.constraint(equalTo: loginTextField.widthAnchor).isActive = true
-        loginButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
-        loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        loginButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40).isActive = true
+        loginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    }
+    
+    func createErrorLabelConstraints() {
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(errorLabel)
+        errorLabel.leftAnchor.constraint(equalTo: loginTextField.leftAnchor).isActive = true
+        errorLabel.centerYAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 10).isActive = true
     }
     
     //MARK: - Functions
@@ -90,17 +109,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
         createLoginConstraints()
         createPasswordConstraints()
         createButtonConstrainsts()
-        isEmailValid()
+        createErrorLabelConstraints()
+        loginButton.addTarget(self, action: #selector(login), for: .touchUpInside)
     }
     
-    func isEmailValid() {
+    func isEmailValid() -> Bool{
         let text = loginTextField.text ?? ""
         if !text.isEmpty {
-            if text.contains("@") {
-                loginTextField.backgroundColor = .systemGreen
-            } else {
-                loginTextField.backgroundColor = .systemRed
+            if text.contains("@") && text.contains(".com"){
+                return true
             }
+        }
+        return false
+    }
+    
+    @objc func login() {
+        if isEmailValid() {
+            errorLabel.isHidden = true
+        }
+        else {
+            loginTextField.backgroundColor = .lightRed
+            errorLabel.isHidden = false
         }
     }
     
@@ -126,7 +155,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func pushTextFieldsUp() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { _ in
             if !UIDevice.current.orientation.isPortrait && self.view.frame.origin.y == 0{
-                self.view.frame.origin.y = -60
+                self.view.frame.origin.y = -80
             }
         }
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) { _ in
@@ -136,7 +165,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        isEmailValid()
+        if isEmailValid() {
+            loginTextField.backgroundColor = .lightGreen
+        }
+        else {
+            loginTextField.backgroundColor = .lightRed
+        }
     }
     
     
