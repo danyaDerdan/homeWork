@@ -15,7 +15,7 @@ class SecondViewController: UIViewController {
         submitButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
     }
     
-    //didnt understand how to use struct constants in not lazy func
+    //didnt understand how to use struct constants in not lazy func (constraints makers)
     private struct Constants {
         static let textLabelFontSizeConstant: CGFloat = 30
         static let labelTextEditFontSizeConstant: CGFloat = 20
