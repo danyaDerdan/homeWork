@@ -1,19 +1,13 @@
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+final class ViewController: UIViewController{
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setup()
-    }
-    
-    struct Constants {
+    private enum Constants {
         static let labelFontSize: CGFloat = 40
         static let elementsCornerRadius: CGFloat = 20
         static let loginButtonSizeFont: CGFloat = 20
         static let errorLabelFontSize: CGFloat = 12
     }
-    
     
     //MARK: - Fields
     private let label : UILabel = {
@@ -63,82 +57,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
-    //MARK: - Constraints
-    private func createLabelConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
-        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        label.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-    }
-    
-    private func createLoginConstraints() {
-        loginTextField.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(loginTextField)
-        loginTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.85).isActive = true
-        loginTextField.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        loginTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30).isActive = true
-    }
-    
-    private func createPasswordConstraints() {
-        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(passwordTextField)
-        passwordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        passwordTextField.widthAnchor.constraint(equalTo: loginTextField.widthAnchor).isActive = true
-        passwordTextField.heightAnchor.constraint(equalTo: loginTextField.heightAnchor).isActive = true
-        passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 35).isActive = true
-    }
-    
-    private func createButtonConstrainsts() {
-        loginButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(loginButton)
-        loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginButton.widthAnchor.constraint(equalTo: loginTextField.widthAnchor).isActive = true
-        loginButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40).isActive = true
-        loginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-    }
-    
-    private func createErrorLabelConstraints() {
-        errorLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(errorLabel)
-        errorLabel.leftAnchor.constraint(equalTo: loginTextField.leftAnchor).isActive = true
-        errorLabel.centerYAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 10).isActive = true
-    }
-    
-    //MARK: - Functions
-    private func setup() {
-        loginTextField.delegate = self
-        passwordTextField.delegate = self
-        pushTextFieldsUp()
-        hideKeyboardWhenTappedAround()
-        createLabelConstraints()
-        createLoginConstraints()
-        createPasswordConstraints()
-        createButtonConstrainsts()
-        createErrorLabelConstraints()
-        loginButton.addTarget(self, action: #selector(login), for: .touchUpInside)
-    }
-    
-    private func isEmailValid() -> Bool{
-        let text = loginTextField.text ?? ""
-        if !text.isEmpty {
-            if text.contains("@") && text.contains(".com"){
-                return true
-            }
-        }
-        return false
-    }
-    
-    @objc func login() {
-        if isEmailValid() {
-            errorLabel.isHidden = true
-            let secondvc = SecondViewController()
-            navigationController?.pushViewController(secondvc, animated: true)
-        }
-        else {
-            loginTextField.backgroundColor = .lightRed
-            errorLabel.isHidden = false
-        }
+    // MARK: - Life cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        addSubviews()
+        setup()
+        addConstraints()
+        view.backgroundColor = .white
     }
     
     //MARK: - KeyBord Logic
@@ -183,3 +108,74 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+extension ViewController : UITextFieldDelegate  {
+    private func addSubviews() {
+        [
+            label,
+            loginTextField,
+            passwordTextField,
+            loginButton,
+            errorLabel
+        ].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+        loginTextField.delegate = self
+        passwordTextField.delegate = self
+    }
+    
+    private func setup() {
+        pushTextFieldsUp()
+        hideKeyboardWhenTappedAround()
+        loginButton.addTarget(self, action: #selector(login), for: .touchUpInside)
+        view.backgroundColor = .white
+    }
+    
+    private func isEmailValid() -> Bool{
+        let text = loginTextField.text ?? ""
+        guard !text.isEmpty else { return false }
+        guard text.contains("@") && text.contains(".com") else { return false }
+        return true
+    }
+    
+    @objc func login() {
+        if isEmailValid() {
+            errorLabel.isHidden = true
+            let secondvc = SecondViewController()
+            navigationController?.pushViewController(secondvc, animated: true)
+        }
+        else {
+            loginTextField.backgroundColor = .lightRed
+            errorLabel.isHidden = false
+        }
+    }
+    
+    private func addConstraints() {
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: view.topAnchor, constant: 100)
+        ])
+        NSLayoutConstraint.activate([
+            loginTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loginTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.85),
+            loginTextField.heightAnchor.constraint(equalToConstant: 35),
+            loginTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30)
+        ])
+        NSLayoutConstraint.activate([
+            passwordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            passwordTextField.widthAnchor.constraint(equalTo: loginTextField.widthAnchor),
+            passwordTextField.heightAnchor.constraint(equalTo: loginTextField.heightAnchor),
+            passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 35)
+        ])
+        NSLayoutConstraint.activate([
+            loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loginButton.widthAnchor.constraint(equalTo: loginTextField.widthAnchor),
+            loginButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
+            loginButton.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        NSLayoutConstraint.activate([
+            errorLabel.leftAnchor.constraint(equalTo: loginTextField.leftAnchor),
+            errorLabel.centerYAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 10)
+        ])
+    }
+}

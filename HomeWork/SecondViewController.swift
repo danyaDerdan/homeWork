@@ -1,29 +1,15 @@
 import UIKit
 
-class SecondViewController: UIViewController {
+final class SecondViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        createTextLabelConstraints()
-        createTextFieldConstraints()
-        createLabelTextEditConstraints()
-        createLabelSwitchConstraints()
-        createSwitchConstraints()
-        createSliderLabelConstraints()
-        createSliderConstraints()
-        createButtonConstraints()
-        submitButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
-    }
-    
-    //didnt understand how to use struct constants in not lazy func (constraints makers)
-    private struct Constants {
+    private enum Constants {
         static let textLabelFontSizeConstant: CGFloat = 30
         static let labelTextEditFontSizeConstant: CGFloat = 20
         static let microFontSize : CGFloat = 15
     }
     
     //MARK: - Fields
-    private lazy var textLabel: UILabel = {
+    private let textLabel: UILabel = {
         let label = UILabel()
         label.text = "Hello"
         label.font = .systemFont(ofSize: .init(Constants.textLabelFontSizeConstant))
@@ -84,83 +70,13 @@ class SecondViewController: UIViewController {
         return button
     }()
     
-    //MARK: - Constraints
-    private func createTextLabelConstraints() {
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(textLabel)
-        NSLayoutConstraint.activate([
-            textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            textLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 80)
-            ])
-    }
-    
-    private func createTextFieldConstraints() {
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(textField)
-        NSLayoutConstraint.activate([
-            textField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            textField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -60),
-            textField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            textField.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
-    
-    private func createLabelTextEditConstraints() {
-        labelTextEdit.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(labelTextEdit)
-        NSLayoutConstraint.activate([
-            labelTextEdit.leftAnchor.constraint(equalTo: textField.leftAnchor),
-            labelTextEdit.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-            ])
-    }
-    
-    private func createLabelSwitchConstraints() {
-        labelToSwitchButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(labelToSwitchButton)
-        NSLayoutConstraint.activate([
-            labelToSwitchButton.leftAnchor.constraint(equalTo: textField.leftAnchor),
-            labelToSwitchButton.topAnchor.constraint(equalTo: labelTextEdit.bottomAnchor, constant: 30)
-            ])
-    }
-    
-    private func createSwitchConstraints() {
-        switchButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(switchButton)
-        NSLayoutConstraint.activate([
-            switchButton.rightAnchor.constraint(equalTo: textField.rightAnchor),
-            switchButton.centerYAnchor.constraint(equalTo: labelToSwitchButton.centerYAnchor),
-            switchButton.widthAnchor.constraint(equalToConstant: 50),
-            switchButton.heightAnchor.constraint(equalToConstant: 30)
-            ])
-    }
-    
-    private func createSliderLabelConstraints() {
-        sliderLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(sliderLabel)
-        NSLayoutConstraint.activate([
-            sliderLabel.leftAnchor.constraint(equalTo: textField.leftAnchor),
-            sliderLabel.topAnchor.constraint(equalTo: switchButton.bottomAnchor, constant: 30)
-            ])
-    }
-    
-    private func createSliderConstraints() {
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(slider)
-        NSLayoutConstraint.activate([
-            slider.leftAnchor.constraint(equalTo: sliderLabel.rightAnchor, constant: 50),
-            slider.rightAnchor.constraint(equalTo: textField.rightAnchor),
-            slider.centerYAnchor.constraint(equalTo: sliderLabel.centerYAnchor)
-        ])
-    }
-    
-    private func createButtonConstraints() {
-        submitButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(submitButton)
-        NSLayoutConstraint.activate([
-            submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
-            submitButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
-            submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
+    // MARK: - Life cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        addSubviews()
+        setUpConstraints()
+        view.backgroundColor = .white
+        submitButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
     }
     
     //MARK: - Funcs
@@ -174,5 +90,64 @@ class SecondViewController: UIViewController {
         }
         textLabel.font = UIFont.systemFont(ofSize: CGFloat(Int(slider.value)))
         print(slider.value)
+    }
+}
+
+private extension SecondViewController{
+    private func addSubviews() {
+        [
+            textLabel,
+            textField,
+            labelTextEdit,
+            switchButton,
+            labelToSwitchButton,
+            slider,
+            sliderLabel,
+            submitButton
+        ].forEach() {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+    }
+    
+    private func setUpConstraints() {
+        NSLayoutConstraint.activate([
+            textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 80)
+            ])
+        NSLayoutConstraint.activate([
+            textField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -60),
+            textField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            textField.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        NSLayoutConstraint.activate([
+            labelTextEdit.leftAnchor.constraint(equalTo: textField.leftAnchor),
+            labelTextEdit.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        NSLayoutConstraint.activate([
+            labelToSwitchButton.leftAnchor.constraint(equalTo: textField.leftAnchor),
+            labelToSwitchButton.topAnchor.constraint(equalTo: labelTextEdit.bottomAnchor, constant: 30)
+            ])
+        NSLayoutConstraint.activate([
+            switchButton.rightAnchor.constraint(equalTo: textField.rightAnchor),
+            switchButton.centerYAnchor.constraint(equalTo: labelToSwitchButton.centerYAnchor),
+            switchButton.widthAnchor.constraint(equalToConstant: 50),
+            switchButton.heightAnchor.constraint(equalToConstant: 30)
+            ])
+        NSLayoutConstraint.activate([
+            sliderLabel.leftAnchor.constraint(equalTo: textField.leftAnchor),
+            sliderLabel.topAnchor.constraint(equalTo: switchButton.bottomAnchor, constant: 30)
+            ])
+        NSLayoutConstraint.activate([
+            slider.leftAnchor.constraint(equalTo: sliderLabel.rightAnchor, constant: 50),
+            slider.rightAnchor.constraint(equalTo: textField.rightAnchor),
+            slider.centerYAnchor.constraint(equalTo: sliderLabel.centerYAnchor)
+        ])
+        NSLayoutConstraint.activate([
+            submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+            submitButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
+            submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            ])
     }
 }

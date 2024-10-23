@@ -15,7 +15,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.rootViewController = navController //link window with navCont
 
             self.window = window //curr window = new window
-            window.backgroundColor = UIColor.white
             window.makeKeyAndVisible() //make window visible
         }
         guard let _ = (scene as? UIWindowScene) else { return }
